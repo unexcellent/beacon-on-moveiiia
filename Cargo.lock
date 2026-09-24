@@ -59,6 +59,7 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "beacon"
 version = "0.1.0"
+source = "git+ssh://git@github.com/unexcellent/beacon.git?branch=main#ce719d6db72df5472dce14fc21af13e043ac6331"
 dependencies = [
  "embedded-hal 1.0.0",
  "embuild",
