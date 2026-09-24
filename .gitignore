@@ -1,0 +1,6 @@
+target
+.embuild
+.venv/
+__pycache__/
+local/
+.claude

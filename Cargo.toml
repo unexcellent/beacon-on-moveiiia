@@ -1,0 +1,48 @@
+cargo-features = ["panic-immediate-abort"]
+
+[package]
+name = "beacon-on-moveiiia"
+version = "0.1.0"
+edition = "2024"
+resolver = "2"
+rust-version = "1.97"
+
+[[bin]]
+name = "beacon-on-moveiiia"
+path = "src/main.rs"
+harness = false
+
+[features]
+# Pretend a camera is physically absent, at compile time, to exercise the boot
+# init-failure downlink (RgbInit / ThermalInit) without unplugging it. Off by
+# default (both cameras enabled). Build e.g. `cargo build --features no-rgb-camera`.
+no-rgb-camera = []
+no-thermal-camera = []
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "immediate-abort"
+
+[profile.dev]
+debug = true
+strip = "debuginfo"
+opt-level = "z"
+
+[patch.crates-io]
+esp-idf-sys = { git = "https://github.com/esp-rs/esp-idf-sys.git" }
+esp-idf-hal = { git = "https://github.com/esp-rs/esp-idf-hal.git" }
+esp-idf-svc = { git = "https://github.com/esp-rs/esp-idf-svc.git" }
+
+[dependencies]
+beacon = { path = "../beacon" }
+embedded-hal = "1"
+log = "0.4"
+sstv = { version = "0.1", default-features = false }
+esp-idf-sys = "0.37"
+esp-idf-hal = "0.46"
+esp-idf-svc = { version = "0.52.1", features = ["critical-section"] }
+
+[build-dependencies]
+embuild = { version = "0.33", features = ["espidf"] }
