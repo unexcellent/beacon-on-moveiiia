@@ -6,9 +6,10 @@ use std::time::Duration;
 use beacon::camera::esp::{
     CsiConfig, CsiInterface, EspI2c, I2cConfig, ResetPin, SpiFrameConfig, SpiFrameInterface,
 };
-use beacon::camera::sensors::{Mi48, Sc850sl};
 use beacon::error::{Error, Result};
 use esp_idf_sys::*;
+
+use crate::sensors::{Mi48, Sc850sl};
 
 /// SSTV output resolution both cameras render into.
 const OUTPUT_WIDTH: usize = sstv::Mode::Robot36.image_width() as usize;

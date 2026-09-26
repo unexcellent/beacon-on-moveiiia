@@ -1,7 +1,9 @@
 //! MOVE-IIIa carrier audio bring-up: the PCM5102A DAC over I2S.
 
-use beacon::audio::{I2sConfig, I2sInterface, Pcm5102a};
+use beacon::audio::{I2sConfig, I2sInterface};
 use beacon::error::Result;
+
+use crate::pcm5102a::Pcm5102a;
 
 /// Interface configuration for the Philips I2S standard at 16 kHz on the ESP32-P4.
 ///

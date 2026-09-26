@@ -1,6 +1,8 @@
 mod audio;
 mod camera;
 mod link;
+mod pcm5102a;
+mod sensors;
 
 use beacon::camera::Camera;
 use beacon::error::{Error, ReportIfErr, Result};
