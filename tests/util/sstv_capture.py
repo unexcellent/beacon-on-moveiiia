@@ -37,12 +37,16 @@ GAP_TOLERANCE = 0.5       # window resolution, DMA drain and encoder setup
 
 
 def send_sstv_command(board: MockPayloadBoard) -> None:
-    """Send the SSTV command and confirm the ESP acknowledged it with BUSY."""
+    """Send the SSTV command, discarding any messages still queued from before."""
     drain(board)
     board.send_sstv()
+
+
+def wait_for_busy(board: MockPayloadBoard) -> None:
+    """Wait for the ESP's BUSY status, i.e. it accepted the SSTV command."""
     busy = board.wait_for_text(b"BUSY", timeout=5.0)
     assert busy is not None and busy.dst == NODE_PAYLOAD, "no BUSY after the SSTV command"
-    log.info("SSTV command sent; ESP is BUSY, transmitting (~36s) ...")
+    log.info("ESP is BUSY, transmitting SSTV ...")
 
 
 def wait_for_available(board: MockPayloadBoard) -> None:

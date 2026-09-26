@@ -27,10 +27,12 @@ from tests.util.sstv_capture import (
     assert_valid_image,
     capture_and_decode,
     send_sstv_command,
+    wait_for_busy,
 )
 
 def test_rgb_only_transmission(board: MockPayloadBoard) -> None:
     send_sstv_command(board)
+    wait_for_busy(board)
     image = capture_and_decode(board)
     assert_valid_image(image, min_std=6.0, min_smoothness=0.35)
 

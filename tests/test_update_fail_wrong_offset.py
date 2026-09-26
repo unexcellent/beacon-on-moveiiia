@@ -26,6 +26,7 @@ def test_wrong_offset(board: MockPayloadBoard) -> None:
     send_update_announcement(board)
     send_update_begin(board, 100_000)
     send_update_data(board, CHUNK, bytes(CHUNK))
+
     expect_update_error(board, b"UpdatePackageOffset")
     assert_recovered(board)
 

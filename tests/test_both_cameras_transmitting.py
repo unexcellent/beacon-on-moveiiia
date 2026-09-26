@@ -30,13 +30,17 @@ from tests.util.sstv_capture import (
     decode_images,
     record_transmission,
     send_sstv_command,
+    wait_for_busy,
 )
 
 
 def test_both_cameras_transmitting(board: MockPayloadBoard) -> None:
     send_sstv_command(board)
+    wait_for_busy(board)
+
     samples, rate = record_transmission(board, seconds=90)
     rgb, thermal = decode_images(samples, rate, count=2)
+
     assert_valid_image(rgb, min_std=6.0, min_smoothness=0.35)
     assert_valid_image(thermal, min_std=5.0, min_smoothness=0.35)
     assert_gap_between_images(samples, rate, seconds=5.0)

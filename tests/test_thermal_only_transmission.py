@@ -29,11 +29,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from tests.util.ota_hil import run_case
 from tests.util.payload_board import MockPayloadBoard
-from tests.util.sstv_capture import assert_valid_image, capture_and_decode, send_sstv_command
+from tests.util.sstv_capture import (
+    assert_valid_image,
+    capture_and_decode,
+    send_sstv_command,
+    wait_for_busy,
+)
 
 
 def test_thermal_only_transmission(board: MockPayloadBoard) -> None:
     send_sstv_command(board)
+    wait_for_busy(board)
     image = capture_and_decode(board)
     assert_valid_image(image, min_std=5.0, min_smoothness=0.35)
 

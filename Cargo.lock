@@ -59,7 +59,7 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "beacon"
 version = "0.1.0"
-source = "git+ssh://git@github.com/unexcellent/beacon.git?branch=main#ce719d6db72df5472dce14fc21af13e043ac6331"
+source = "git+ssh://git@github.com/unexcellent/beacon.git?branch=main#23cea60dea08dfc602fea99cbffc7cc137fcf592"
 dependencies = [
  "embedded-hal 1.0.0",
  "embuild",
@@ -1303,9 +1303,9 @@ dependencies = [
 
 [[package]]
 name = "sstv"
-version = "0.1.2"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2980fd4bb5e90d4b4faf16a9232ce42a7cf9354c1cd7b3117146ec67542a496"
+checksum = "a538c0cb511051b9ab40271f3ff709d7d4842378951d03ee41d6fa58a4c24898"
 dependencies = [
  "libm",
 ]

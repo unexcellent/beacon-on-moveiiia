@@ -12,8 +12,8 @@ use esp_idf_sys::*;
 use crate::sensors::{Mi48, Sc850sl};
 
 /// SSTV output resolution both cameras render into.
-const OUTPUT_WIDTH: usize = sstv::Mode::Robot36.image_width() as usize;
-const OUTPUT_HEIGHT: usize = sstv::Mode::Robot36.image_height() as usize;
+const OUTPUT_WIDTH: usize = sstv::modes::ROBOT_36.resolution().0 as usize;
+const OUTPUT_HEIGHT: usize = sstv::modes::ROBOT_36.resolution().1 as usize;
 
 const RGB_SDA_PIN: i32 = 11;
 const RGB_SCL_PIN: i32 = 9;

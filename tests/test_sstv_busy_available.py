@@ -16,11 +16,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from tests.util.ota_hil import run_case
 from tests.util.payload_board import MockPayloadBoard
-from tests.util.sstv_capture import send_sstv_command, wait_for_available
+from tests.util.sstv_capture import send_sstv_command, wait_for_available, wait_for_busy
 
 
 def test_sstv_busy_available(board: MockPayloadBoard) -> None:
     send_sstv_command(board)
+    wait_for_busy(board)
     wait_for_available(board)
 
 

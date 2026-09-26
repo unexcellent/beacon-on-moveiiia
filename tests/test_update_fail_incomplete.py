@@ -33,10 +33,12 @@ from tests.util.payload_board import MockPayloadBoard
 
 def test_incomplete(board: MockPayloadBoard) -> None:
     header = staged_firmware_image()[:CHUNK]
+
     send_update_announcement(board)
     send_update_begin(board, 100 * len(header))
     send_update_data(board, 0, header)
     send_update_end(board)
+
     expect_update_error(board, b"UpdateIncomplete")
     assert_recovered(board)
 

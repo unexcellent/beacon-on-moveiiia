@@ -23,6 +23,7 @@ from tests.util.payload_board import MockPayloadBoard
 def test_end_before_begin(board: MockPayloadBoard) -> None:
     send_update_announcement(board)
     send_update_end(board)
+
     expect_update_error(board, b"UpdateNotInProgress")
     assert_recovered(board)
 

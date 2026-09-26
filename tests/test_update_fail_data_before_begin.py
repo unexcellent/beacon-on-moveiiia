@@ -24,6 +24,7 @@ from tests.util.payload_board import MockPayloadBoard
 def test_data_before_begin(board: MockPayloadBoard) -> None:
     send_update_announcement(board)
     send_update_data(board, 0, bytes(CHUNK))
+
     expect_update_error(board, b"UpdateNotInProgress")
     assert_recovered(board)
 

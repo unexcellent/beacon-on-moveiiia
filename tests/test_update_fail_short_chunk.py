@@ -26,6 +26,7 @@ def test_short_chunk(board: MockPayloadBoard) -> None:
     send_update_announcement(board)
     send_update_begin(board, 100_000)
     send_update_data(board, 0, bytes(CHUNK // 2))
+
     expect_update_error(board, b"UpdateChunkIncomplete")
     assert_recovered(board)
 

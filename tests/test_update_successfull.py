@@ -56,7 +56,7 @@ def test_update_successful(board: MockPayloadBoard) -> None:
     send_update_end(board)
     success = receive_boot_info(board)
 
-    assert success, "ESP did not reboot into the new firmware"
+    assert success
 
 
 def build_firmware() -> bytes:
@@ -98,7 +98,9 @@ def build_firmware() -> bytes:
 
 
 def send_update_announcement(board: MockPayloadBoard) -> None:
-    drain(board)  # start the session clean: drop any stale frames (e.g. a startup BOOTED)
+    drain(
+        board
+    )  # start the session clean: drop any stale frames (e.g. a startup BOOTED)
     board.update_announce(CHUNK)
     time.sleep(0.2)
 

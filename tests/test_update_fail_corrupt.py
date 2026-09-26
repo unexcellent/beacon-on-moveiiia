@@ -32,10 +32,12 @@ from tests.util.payload_board import MockPayloadBoard
 
 def test_corrupt(board: MockPayloadBoard) -> None:
     truncated_image = staged_firmware_image()[:CHUNK]
+
     send_update_announcement(board)
     send_update_begin(board, len(truncated_image))
     send_update_data(board, 0, truncated_image)
     send_update_end(board)
+
     expect_update_error(board, b"UpdateCorrupt", timeout=15.0)
     assert_recovered(board)
 
