@@ -1,0 +1,83 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths-ignore:
+      - "**/README.md"
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Every pre-commit hook except clippy, which needs the ESP-IDF toolchain and
+  # runs in its own job below.
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    env:
+      SKIP: cargo-clippy
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: rust-src rustfmt
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+
+  clippy:
+    name: cargo clippy
+    runs-on: ubuntu-latest
+    env:
+      # Must match ESP_IDF_VERSION and the IDF_PATH / IDF_PYTHON_ENV_PATH layout in
+      # .cargo/config.toml, which point into .embuild/ instead of downloading.
+      ESP_IDF_VERSION: v5.5.3
+      IDF_TOOLS_PATH: ${{ github.workspace }}/.embuild/espressif
+      BINDGEN_EXTRA_CLANG_ARGS_riscv32imafc_esp_espidf: -I${{ github.workspace }}/.embuild/espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/riscv32-esp-elf/include
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: rust-src clippy
+      - name: Setup Python
+        # The python env name in .cargo/config.toml (idf5.5_py3.13_env) pins 3.13.
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y ninja-build libclang-dev
+      - name: Install ldproxy
+        uses: taiki-e/install-action@v2
+        with:
+          tool: ldproxy
+      - name: Cache ESP-IDF
+        id: esp-idf-cache
+        uses: actions/cache@v4
+        with:
+          path: .embuild
+          key: esp-idf-${{ env.ESP_IDF_VERSION }}-${{ runner.os }}-${{ hashFiles('.cargo/config.toml') }}
+      - name: Install ESP-IDF
+        if: steps.esp-idf-cache.outputs.cache-hit != 'true'
+        run: |
+          IDF_DIR=.embuild/espressif/esp-idf/$ESP_IDF_VERSION
+          git clone --depth 1 --branch "$ESP_IDF_VERSION" --recursive --shallow-submodules \
+            https://github.com/espressif/esp-idf.git "$IDF_DIR"
+          "$IDF_DIR/install.sh" esp32p4
+      - name: Enable caching
+        uses: Swatinem/rust-cache@v2
+      - name: Run clippy
+        run: cargo clippy --all-features --all-targets -- -D warnings
